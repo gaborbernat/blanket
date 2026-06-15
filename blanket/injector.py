@@ -593,8 +593,8 @@ class Location:
 def inject_call(injected_function, location, *, name=''):
     """
     Create a new function that calls injected_function at the specified location.
-    
-    Parameters:
+
+    Args:
         injected_function: Either a callable to inject, or a string name to look up in globals
         location: Location object specifying where to inject
         name: Name to bind injected_function to in new function's globals (keyword-only)

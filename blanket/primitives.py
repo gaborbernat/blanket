@@ -287,10 +287,12 @@ class Not(ImmutableThreadSignalToken):
 
     Examples:
         Not(A) -- high iff thread A has no active transaction.  Goes
-            high after A terminates: cleanly via tx.close() on the
-            worker, or via tx.aborted() from the thread monitor if
-            A died with an active tx.
+        high after A terminates: cleanly via tx.close() on the
+        worker, or via tx.aborted() from the thread monitor if
+        A died with an active tx.
+
         Not(Terminated(A)) -- high iff A has not terminated.
+
         Not(Not(X)) -- high iff X is high.  (Literally evaluates to X.)
     """
     __slots__ = ()
@@ -7681,9 +7683,11 @@ class Scenario:
 
         def promote(self):
             """Pop and return the pending-head Driver without driving it.
+
             Returns None if pending is empty.  The returned Driver is
             unowned -- the caller must register or close it.  Useful
-            for custom iteration patterns: e.g.
+            for custom iteration patterns::
+
                 while (d := chain.promote()) is not None:
                     ... # caller chooses whether to drive d
             """
@@ -7830,16 +7834,14 @@ class Scenario:
 
         Two reference patterns are intercepted:
 
-        1.  Names bound directly to a threading primitive class:
-                from threading import Lock     # target.Lock is threading.Lock
-                Mutex = threading.Lock         # target.Mutex is threading.Lock
+        1.  Names bound directly to a threading primitive class, such as
+            ``from threading import Lock`` or ``Mutex = threading.Lock``.
             Each such name is rebound to the corresponding scenario
             primitive class.  Identity-checked: a user-defined class
             that happens to share the name 'Lock' is left alone.
 
         2.  A module attribute whose value is the threading module
-            itself:
-                import threading               # target.threading is threading
+            itself, such as ``import threading``.
             That attribute is replaced with a small stand-in object
             whose .Lock / .RLock / .Condition / .Semaphore /
             .BoundedSemaphore / .Event / .Barrier are this scenario's
